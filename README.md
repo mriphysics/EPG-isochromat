@@ -5,7 +5,7 @@ This repository contains Matlab code for implementing EPG and isochromat-summati
 
 Author: Shaihan Malik (twitter: @shaihanmalik), November 2015
 
- ### Usage
+### Usage
 Results for ISMRM abstract can be replicated by running:
 * `SPGR_runme_1.m`: Compares transient SPGR simulations
 * `FSE_runme.m`: Compares transient FSE simulations
