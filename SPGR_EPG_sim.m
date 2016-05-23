@@ -1,3 +1,4 @@
+%% 
 function [F0,Fn,Zn,F] = SPGR_EPG_sim(theta, phi, TR, T1, T2,Npulse,varargin)
 
 % [F0,Fn,Zn,F] = SPGR_EPG_sim(theta, phi, TR, T1, T2,Npulse,varargin)

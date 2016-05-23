@@ -68,7 +68,7 @@ else
 end
 
 %% Generate data for selected phase angle
-phisel=106.5;
+phisel=108;
 [tmp0,Fn] = SPGR_EPG_sim(d2r(alpha), d2r(phisel),TR, T1, T2,npulse,'kmax',inf);
 [tmp1,mxy] = SPGR_isochromat_sim(d2r(alpha),d2r(phisel),TR,T1,T2,npulse,'Niso',Niso);
 [tmp2,Fn2] = SPGR_EPG_sim(d2r(alpha), d2r(phisel),TR, T1, T2,npulse,'diff',diff,'kmax',inf);
@@ -116,7 +116,7 @@ colormap(jetfade)
 hold
 patch([1 1 npulse npulse],[-50 yl(1) yl(1) -50],[0 0 0],'facealpha',0.3,'edgealpha',0.)
 patch([1 1 npulse npulse],[50 yl(2) yl(2) 50],[0 0 0],'facealpha',0.3,'edgealpha',0.)
-title('EPG, \Phi=109^\circ No diffusion')
+title('EPG, \Phi=108^\circ No diffusion')
 xlabel('Pulse number')
 ylabel('n','rotation',0,'fontweight','bold')
 set(gca,'fontsize',fs)
@@ -130,7 +130,7 @@ colormap(jetfade)
 hold
 patch([1 1 npulse npulse],[-50 yl(1) yl(1) -50],[0 0 0],'facealpha',0.3,'edgealpha',0.)
 patch([1 1 npulse npulse],[50 yl(2) yl(2) 50],[0 0 0],'facealpha',0.3,'edgealpha',0.)
-title('EPG, \Phi=109^\circ With diffusion')
+title('EPG, \Phi=108^\circ With diffusion')
 xlabel('Pulse number')
 ylabel('n','rotation',0,'fontweight','bold')
 set(gca,'fontsize',fs2)
@@ -138,6 +138,45 @@ set(gca,'fontsize',fs2)
 cc = colorbar;
 set(cc,'position',[0.955 0.34 0.018 0.3],'fontsize',fs2)
 
-ha = annotation('arrow',[0.456 0.427],[0.659 0.669]);
+ha = annotation('arrow',[0.4000 0.4203],[0.8745 0.8381]);
 set(gcf,'position',[300 300 900 550])
+
+%% Make a bunch of different EPGs for different phase offsets
+
+theta_vec = [10 10 10 45 45 45];
+phi_vec = [5 60 117 5 60 117];
+
+Niso = 40;
+npulse=100;
+nrmse = @(x1,x2)(norm(x1(:)-x2(:))/norm(x2(:)));
+
+Fn={};
+err=[];
+for ii=1:6
+    [s,Fn{ii}] = SPGR_EPG_sim(d2r(theta_vec(ii)),d2r(phi_vec(ii)),TR, T1, ...
+        T2,npulse,'kmax',inf);  
+    [sstmp,mxytmp] = SPGR_isochromat_sim(d2r(theta_vec(ii)),d2r(phi_vec(ii)),...
+        TR, T1, T2,npulse,'psi',psi(Niso));
+   
+     err(ii) = nrmse(sstmp,s);
+end
+
+figfp(4)
+nr=2;nc=3;
+for ii=1:6
+    subplot(nr,nc,ii)
+    %imagesc(1:npulse,n_indices(2*nmax+1),abs(Fn{ii}),[0 0.05])
+    imagesc(1:npulse,n_indices(2*npulse-1),log10(abs(Fn{ii})),[-5 -1])
+    axis xy
+    title(sprintf('F_n     \\theta = %d^\\circ \\Phi = %1.1f ^\\circ',theta_vec(ii),phi_vec(ii)))
+    xlabel('Pulse number')
+    ylabel('n')
+    
+    text(1,-80,sprintf('nRMS diff = %1.3f',err(ii)),'color',[0 0 0],'fontweight','bold','fontsize',13)
+end
+
+colormap(jetfade)
+
+set(gcf,'position',[100 200 800 450])
+
 

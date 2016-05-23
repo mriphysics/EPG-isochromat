@@ -12,7 +12,7 @@ nmax=npulse-1;
 
 %%% helper functions and quantities
 psi = @(n)(2*pi*(0:fix(n)-1)/fix(n));
-ft = @(m)(fftshift(fft(m,[],1),1)/size(m,1));
+ft = @(m)(fftshift(fft(m,[],1),1)/size(m,1)); %<- shifted form of DFT with 1/N normalisation
 ift = @(f)(ifft(ifftshift(f,1),[],1)*size(f,1));
 n_indices = @(Niso)(-floor((Niso)/2):floor((Niso-1)/2));
 d2r = @(x)(x*pi/180);
