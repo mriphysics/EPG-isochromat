@@ -1,5 +1,5 @@
-%% SPGR diffusion script. Generates figure 5 from ISMRM abstract
-% Shaihan Malik, October 2015
+%% SPGR diffusion script. performs Experiment 3 from the paper.
+% Shaihan Malik 2016
 
 TR=5;
 alpha= 10;
@@ -89,7 +89,7 @@ plot(phi_arr,abs(Sig(:,1)-Sig(:,2))/Sideal);
 
 legend('EPG','100 isochromats','difference')
 xlabel('\Phi / deg')
-ylabel('|F_0| / S_{ideal}')
+ylabel('|F_0| / S_{Ernst}')
 title('No diffusion')
 set(gca,'fontsize',fs)
 
@@ -100,7 +100,7 @@ hold
 plot(phi_arr,abs(Sig(:,3)-Sig(:,4))/Sideal);
 legend('EPG','100 isochromats','difference')
 xlabel('\Phi / deg')
-ylabel('|F_0| / S_{ideal}')
+ylabel('|F_0| / S_{Ernst}')
 title('With diffusion')
 set(gca,'fontsize',fs)
 
@@ -108,9 +108,9 @@ set(gca,'fontsize',fs)
 %%% images
 yl=[-150 150];
 winl=[0 0.1];
-winlog=[-5 0];
+winlog=[-10 -1];
 subplot(nr,nc,3)
-imagesc(1:npulse,n_indices(npulse),log10(abs(Fn)/Sideal),winlog);ylim(yl)
+imagesc(1:npulse,n_indices(npulse),log10(abs(Fn)),winlog);ylim(yl)
 axis xy
 colormap(jetfade)
 hold
@@ -123,7 +123,7 @@ set(gca,'fontsize',fs)
 set(gca,'fontsize',fs2)
 
 subplot(nr,nc,6)
-imagesc(1:npulse,n_indices(npulse),log10(abs(Fn2)/Sideal),winlog);ylim(yl)
+imagesc(1:npulse,n_indices(npulse),log10(abs(Fn2)),winlog);ylim(yl)
 
 axis xy
 colormap(jetfade)
@@ -136,12 +136,27 @@ ylabel('n','rotation',0,'fontweight','bold')
 set(gca,'fontsize',fs2)
 
 cc = colorbar;
-set(cc,'position',[0.955 0.34 0.018 0.3],'fontsize',fs2)
+set(cc,'position',[0.945 0.34 0.018 0.3],'fontsize',fs2)
 
 ha = annotation('arrow',[0.4000 0.4203],[0.8745 0.8381]);
-set(gcf,'position',[300 300 900 550])
+set(gcf,'position',[300 300 900 550],'paperpositionmode','auto')
 
-%% Make a bunch of different EPGs for different phase offsets
+
+%%% Annotate
+gg=get(gcf,'Children');
+axes(gg(7))
+text(-20,-0.4,'(a)','fontsize',20,'fontweight','bold')
+axes(gg(5))
+text(-20,-0.4,'(c)','fontsize',20,'fontweight','bold')
+axes(gg(3))
+text(0,-200,'(b)','fontsize',20,'fontweight','bold')
+axes(gg(2))
+text(0,-200,'(d)','fontsize',20,'fontweight','bold')
+text(1600,10,'log_{10} |F_n|','fontsize',16)
+print -dpng -r300 figure5.png
+
+
+%% SUPP FIG Make a bunch of different EPGs for different phase offsets
 
 theta_vec = [10 10 10 45 45 45];
 phi_vec = [5 60 117 5 60 117];

@@ -1,5 +1,5 @@
-%% FSE simulations script.This generates Figure 4 from ISMRM abstract
-% Shaihan Malik, October 2015
+%%% FSE simulations, performs Experiment 2 from the paper.
+% Shaihan Malik 2016
 
 %%% helper functions and quantities
 psi = @(n)(2*pi*(0:n-1)/n);
@@ -95,7 +95,7 @@ for ii = 1:length(Niso)
 end
 end
 
-%% Generate figure for abstract
+%% Generate figure 4
 figure(1)
 clf
 nr=3;nc=3;
@@ -107,9 +107,9 @@ hold
 semilogy(Niso(evix),err(evix),'.-','markersize',10)
 legend('Odd number of isochromats','Even number of isochromats')
 grid 
-title('Error in |S| vs N')
+title('Error in predicted signal')
 hx=xlabel('Number of isochromats, N');
-ylabel('RMS Error')
+ylabel('\epsilon','rotation',0,'fontsize',20)
 hxpos=get(hx,'position');hxpos(1)=120;set(hx,'position',hxpos)
 set(gca,'fontsize',14)
 
@@ -120,18 +120,18 @@ for ix=1:length(spidx)
     subplot(nr,nc,spidx(ix))
     yt = -floor((NisoR(ix)-1)/2-2):floor((NisoR(ix)-1)/2);
     mf = ft(mxy{find(Niso==NisoR(ix))});
-    imagesc(1:Necho,yt,abs(mf),[0 0.2])
+    imagesc(1:Necho,yt,abs(mf),[0 0.1])
     axis xy
     xlabel('Echo number')
     ylabel('n','rotation',0)
-    title(sprintf('fft(M_+), N=%d',NisoR(ix)))
+    title(sprintf('DFT(M_+): N=%d',NisoR(ix)))
     colormap(jetfade)
     grid on
     set(gca,'fontsize',11.5)
 end
 
 pp=get(gcf,'children');
-set(gcf,'position',[100 100 1100 600],'name','Abstract - Figure 4')
+set(gcf,'position',[100 100 1100 600],'paperpositionMode','auto')
 cc = colorbar('southoutside');
 
 set(pp(7),'position',[0.15 0.35 0.54 0.3])
@@ -155,4 +155,4 @@ for ii=1:5
 end
 text(377,-338,'Amplitude / M_0','fontsize',12)
 
-
+print -dpng -r300 Figure4.png
