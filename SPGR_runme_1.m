@@ -11,7 +11,7 @@ nmax=npulse-1;
 
 
 %%% helper functions and quantities
-psi = @(n)(0.1*randn(1,n)+2*pi*(0:fix(n)-1)/fix(n));
+psi = @(n)(2*pi*(0:fix(n)-1)/fix(n));
 ft = @(m)(fftshift(fft(m,[],1),1)/size(m,1)); %<- shifted form of DFT with 1/N normalisation
 ift = @(f)(ifft(ifftshift(f,1),[],1)*size(f,1));
 n_indices = @(Niso)(-floor((Niso)/2):floor((Niso-1)/2));
@@ -90,18 +90,14 @@ text(-20,2*pi+0.2,'(d)','fontsize',18,'fontweight','bold')
 axes(gg(1))
 text(-20,-110,'(e)','fontsize',18,'fontweight','bold')
 
-print -dpng -r300 Figure2.png
-
-
-
-
+% print -dpng -r300 Figure2.png
 
 
 
 
 %% 2. More reduced versions
 
-Niso = [10:5:npulse 2*npulse-1 2*npulse+50];
+Niso = [10:5:npulse 2*npulse-1 2*npulse+50 2*npulse+100];
 
 nrmse = @(x1,x2)(norm(x1(:)-x2(:))/norm(x2(:)));
 
@@ -141,11 +137,11 @@ subplot(nr,nc,11:12);
 semilogy(Niso,err);
 grid 
 xlabel('Number of isochromats (N)')
-ylabel('S_{err}','rotation',0)
+ylabel('\epsilon','rotation',0,'fontsize',20)
 title('Error in predicted signal')
 
 subplot(nr,nc,3:4);
-ix = [ 7 19 21];
+ix = [9 19 22];
 plot(abs(s_iso(:,ix)))
 grid
 hold
@@ -155,7 +151,7 @@ for ii=1:length(ix),leg{ii}=sprintf('N = %d',Niso(ix(ii)));end
 leg{end+1} = 'EPG';
 ll=legend(leg);%,'location','eastoutside');
 ylim([0 0.2])
-xlabel('RF pulse number')
+xlabel('RF pulse number (p)')
 ylabel('|F_0|/M_0')
 title('Simulated signal (|F_0|) vs N')
 
@@ -221,4 +217,51 @@ gg(9).Position = [0.62 0.15 0.33 0.32];
 axes(gg(9))
 text(-50,5e-16,'(h)','fontsize',18,'fontweight','bold')
 
-print -dpng -r300 Figure3.png
+% print -dpng -r300 Figure3.png
+
+
+%% Supporting Figure S2: Make a bunch of different EPGs for different phase offsets
+
+theta_vec = [10 10 10 45 45 45];
+phi_vec = [5 60 117 5 60 117];
+
+% Use 50 isochromats, i.e. N<K
+Niso = 50;
+npulse=100;
+nrmse = @(x1,x2)(norm(x1(:)-x2(:))/norm(x2(:)));
+
+Fn={};
+err=[];
+tags = {'(a)','(b)','(c)','(d)','(e)','(f)'};
+for ii=1:6
+    [s,Fn{ii}] = SPGR_EPG_sim(d2r(theta_vec(ii)),d2r(phi_vec(ii)),TR, T1, ...
+        T2,npulse,'kmax',inf);  
+    [sstmp,mxytmp] = SPGR_isochromat_sim(d2r(theta_vec(ii)),d2r(phi_vec(ii)),...
+        TR, T1, T2,npulse,'psi',psi(Niso));
+   
+     err(ii) = nrmse(sstmp,s);
+end
+
+figure(4);clf
+nr=2;nc=3;
+for ii=1:6
+    subplot(nr,nc,ii)
+    imagesc(1:npulse,n_indices(2*npulse-1),log10(abs(Fn{ii})),[-5 -1])
+    axis xy
+    title(sprintf('F_n: \\theta = %d^\\circ \\Phi = %1.1f ^\\circ',theta_vec(ii),phi_vec(ii)))
+    xlabel('Pulse number')
+    ylabel('n')
+    
+    text(10,-70,sprintf('\\epsilon = %1.3f',err(ii)),'color',[0 0 0],'fontweight','bold','fontsize',13)
+    text(-20,-120,tags{ii},'fontweight','bold','fontsize',16)
+end
+
+colormap(jetfade)
+cc = colorbar;
+set(cc,'position',[0.945 0.34 0.018 0.3],'fontsize',13)
+text(110,-10,'log_{10} |F_n|','fontsize',13)
+
+set(gcf,'position',[100 200 800 450])
+
+
+% print -dpng -r300 SupFig2.png

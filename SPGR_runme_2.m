@@ -153,45 +153,7 @@ text(0,-200,'(b)','fontsize',20,'fontweight','bold')
 axes(gg(2))
 text(0,-200,'(d)','fontsize',20,'fontweight','bold')
 text(1600,10,'log_{10} |F_n|','fontsize',16)
-print -dpng -r300 figure5.png
+% print -dpng -r300 figure5.png
 
-
-%% SUPP FIG Make a bunch of different EPGs for different phase offsets
-
-theta_vec = [10 10 10 45 45 45];
-phi_vec = [5 60 117 5 60 117];
-
-Niso = 40;
-npulse=100;
-nrmse = @(x1,x2)(norm(x1(:)-x2(:))/norm(x2(:)));
-
-Fn={};
-err=[];
-for ii=1:6
-    [s,Fn{ii}] = SPGR_EPG_sim(d2r(theta_vec(ii)),d2r(phi_vec(ii)),TR, T1, ...
-        T2,npulse,'kmax',inf);  
-    [sstmp,mxytmp] = SPGR_isochromat_sim(d2r(theta_vec(ii)),d2r(phi_vec(ii)),...
-        TR, T1, T2,npulse,'psi',psi(Niso));
-   
-     err(ii) = nrmse(sstmp,s);
-end
-
-figfp(4)
-nr=2;nc=3;
-for ii=1:6
-    subplot(nr,nc,ii)
-    %imagesc(1:npulse,n_indices(2*nmax+1),abs(Fn{ii}),[0 0.05])
-    imagesc(1:npulse,n_indices(2*npulse-1),log10(abs(Fn{ii})),[-5 -1])
-    axis xy
-    title(sprintf('F_n     \\theta = %d^\\circ \\Phi = %1.1f ^\\circ',theta_vec(ii),phi_vec(ii)))
-    xlabel('Pulse number')
-    ylabel('n')
-    
-    text(1,-80,sprintf('nRMS diff = %1.3f',err(ii)),'color',[0 0 0],'fontweight','bold','fontsize',13)
-end
-
-colormap(jetfade)
-
-set(gcf,'position',[100 200 800 450])
 
 

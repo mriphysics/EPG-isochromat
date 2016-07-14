@@ -155,4 +155,4 @@ for ii=1:5
 end
 text(377,-338,'Amplitude / M_0','fontsize',12)
 
-print -dpng -r300 Figure4.png
+% print -dpng -r300 Figure4.png
