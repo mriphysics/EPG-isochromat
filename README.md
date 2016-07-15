@@ -9,7 +9,7 @@ This repository contains Matlab code for implementing EPG and isochromat-summati
 
 This project was first presented as an ISMRM abstract at the 2016 conference and has since been written up as a full paper. For details of the ISMRM abstract version, [please see this page](docs/abstract.md)
 
-The following document describes the full version of the code, which has been written up and submitted to *journal* and *doi link here*
+The following document describes the full version of the code, which has been written up and submitted for peer reviewed publication.
 
 Author: Shaihan Malik (twitter: [@shaihanmalik](https://twitter.com/shaihanmalik)), June 2016
 
@@ -26,6 +26,6 @@ The results in the paper are divided into 3 experiments, which are generated fro
 The core functions to simulate SPGR and FSE sequences respectively are `SPGR_isochromat_sim.m` and `FSE_isochromat_sim.m` for isochromat summation and `SPGR_EPG_sim.m` and `FSE_EPG_sim.m` for Extended Phase Graphs. These have the same underlying syntax, and angles are always in radians, times in ms.
 
 
-## [Detailed description of implementations](docs/detailed_description.html)
+## Detailed description of implementations
 
-For a detailed description of the implementations please click [here](docs/detailed_description.html). Please note that the linked page uses [strapdown](http://strapdownjs.com/) for formatting and [mathjax](https://www.mathjax.org/) for rendering the maths. Please contact us if it doesn't display properly.
+A detailed supporting methods document has been written as part of this work. You can download it [here](docs/supporting_methods_document.pdf). Please get in touch with any comments or suggestions
